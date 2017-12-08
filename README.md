@@ -44,7 +44,8 @@ For a detailed explanation on how things work, check out the [guide](http://vuej
 │   │   ├── images
 │   │   ├── js
 │   │   └── stylus
-│   ├── components  工程组件
+│   ├── base        工程基础组件
+│   ├── components  工程业务组件
 │   ├── main.js     入口js文件
 │   ├── router      路由配置
 │   └── store       vuex相关代码
