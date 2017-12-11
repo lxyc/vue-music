@@ -12,15 +12,20 @@ export default {
   props: {
     probeType: {
       type: Number,
-      efault: 1
+      default: 1
     },
     click: {
       type: Boolean,
-      efault: true
+      default: true
     },
     data: {
       type: Array,
       default: null
+    },
+    // scroll是否需要监听滚动事件
+    listenScroll: {
+      type: Boolean,
+      default: false
     }
   },
   mounted() {
@@ -44,6 +49,13 @@ export default {
         probeType: this.probeType,
         click: this.click
       })
+
+      if (this.listenScroll) {
+        let self = this
+        this.scroll.on('scroll', (pos) => {
+          self.$emit('scroll', pos)
+        })
+      }
     },
     enable() {
       this.scroll && this.scroll.enable()
