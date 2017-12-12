@@ -5,8 +5,48 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+import { getSingerDetail } from 'api/singer'
+import { ERR_OK } from 'api/config'
+import { createSong, isValidMusic } from 'common/js/song'
+
 export default {
-  name: 'singer-detail'
+  name: 'singer-detail',
+  data() {
+    return {
+      song: []
+    }
+  },
+  computed: {
+    ...mapGetters([
+      'singer'
+    ])
+  },
+  created() {
+    this._getDetail()
+  },
+  methods: {
+    _getDetail() {
+      if (!this.singer.id) {
+        this.$router.push('/singer')
+      }
+      getSingerDetail(this.singer.id).then((res) => {
+        if (res.code === ERR_OK) {
+          this.songs = this._normalizeSongs(res.data.list)
+        }
+      })
+    },
+    _normalizeSongs(list) {
+      let ret = []
+      list.forEach(item => {
+        let { musicData } = item
+        if (isValidMusic(musicData)) {
+          ret.push(createSong(musicData))
+        }
+      })
+      return ret
+    }
+  }
 }
 </script>
 
