@@ -7,6 +7,7 @@ export function getVKey(songmid, filename) {
   const url = 'https://c.y.qq.com/base/fcgi-bin/fcg_music_express_mobile3.fcg'
 
   const data = Object.assign({}, commonParams, {
+    g_tk: 1928093487,
     cid: 205361747,
     format: 'json',
     platform: 'yqq',

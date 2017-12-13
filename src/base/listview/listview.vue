@@ -25,11 +25,15 @@
     <div class="list-fixed" v-show="fixedTitle" ref="fixed">
       <div class="fixed-title">{{ fixedTitle }}</div>
     </div>
+    <div class="loading-container" v-show="!data.length">
+      <loading></loading>
+    </div>
   </scroll>
 </template>
 
 <script>
 import Scroll from 'base/scroll/scroll'
+import Loading from 'base/loading/loading'
 import { getData } from 'common/js/dom'
 
 const ANCHOR_HEIGHT = 18
@@ -151,7 +155,8 @@ export default {
     }
   },
   components: {
-    Scroll
+    Scroll,
+    Loading
   }
 }
 </script>
