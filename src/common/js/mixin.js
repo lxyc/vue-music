@@ -71,7 +71,9 @@ export const playerMixin = {
 export const searchMixin = {
   data() {
     return {
-      query: ''
+      query: '',
+      // 由于动画效果，20ms后scroll高度未正确计算时，便refresh()了，因此需要自定义refresh()时间
+      refreshDelay: 100
     }
   },
   computed: {

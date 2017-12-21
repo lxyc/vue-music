@@ -34,19 +34,16 @@ export default {
     beforeScroll: {
       type: Boolean,
       default: false
+    },
+    refreshDelay: {
+      type: Number,
+      default: 20
     }
   },
   mounted() {
     setTimeout(() => {
       this._initScroll()
     }, 20)
-  },
-  watch: {
-    data() {
-      setTimeout(() => {
-        this.refresh()
-      }, 20)
-    }
   },
   methods: {
     _initScroll() {
@@ -93,6 +90,13 @@ export default {
     },
     scrollToElement() {
       this.scroll && this.scroll.scrollToElement.apply(this.scroll, arguments)
+    }
+  },
+  watch: {
+    data() {
+      setTimeout(() => {
+        this.refresh()
+      }, this.refreshDelay)
     }
   }
 }
