@@ -88,11 +88,12 @@
             <i @click.stop="togglePlaying" :class="miniIcon" class="icon-mini"></i>
           </progress-circle>
         </div>
-        <div class="control">
+        <div class="control" @click.stop="showPlaylist">
           <div class="icon-playlist"></div>
         </div>
       </div>
     </transition>
+    <playlist ref="playlist"></playlist>
     <!-- 当浏览器能够开始播放指定的音频/视频时，发生 canplay 事件 -->
     <audio ref="audio" :src="currentSong.url" @canplay="ready" @error="error" @timeupdate="updateTime" @ended="end"></audio>
   </div>
@@ -105,15 +106,17 @@ import animations from 'create-keyframe-animation'
 import ProgressBar from 'base/progress-bar/progress-bar'
 import ProgressCircle from 'base/progress-circle/progress-circle'
 import { playMode } from 'common/js/config'
-import { shuffle } from 'common/js/util'
 import Lyric from 'lyric-parser'
 import Scroll from 'base/scroll/scroll'
+import Playlist from 'components/playlist/playlist'
+import { playerMixin } from 'common/js/mixin'
 
 const transform = prefixStyle('transform')
 const transitionDuration = prefixStyle('transitionDuration')
 
 export default {
   name: 'player',
+  mixins: [playerMixin],
   data () {
     return {
       songReady: false,
@@ -138,20 +141,13 @@ export default {
     disableCls() {
       return this.songReady ? '' : 'disable'
     },
-    iconMode() {
-      return this.mode === playMode.sequence ? 'icon-sequence' : this.mode === playMode.loop ? 'icon-loop' : 'icon-random'
-    },
     percent() {
       return this.currentTime / this.currentSong.duration
     },
     ...mapGetters([
       'fullScreen',
-      'playList',
-      'currentSong',
       'playing',
-      'currentIndex',
-      'mode',
-      'sequenceList'
+      'currentIndex'
     ])
   },
   created () {
@@ -291,26 +287,6 @@ export default {
         this.currentLyric.seek(currentTime * 1000)
       }
     },
-    changeMode() {
-      const mode = (this.mode + 1) % 3
-      this.setPlayMode(mode)
-
-      let list = null
-      if (mode === playMode.random) {
-        list = shuffle(this.sequenceList)
-      } else {
-        list = this.sequenceList
-      }
-      // 切换模式时，保证当前歌曲不变
-      this.resetCurrentIndex(list)
-      this.setPlayList(list)
-    },
-    resetCurrentIndex(list) {
-      let index = list.findIndex((item) => {
-        return item.id === this.currentSong.id
-      })
-      this.setCurrentIndex(index)
-    },
     getLyric() {
       this.currentSong.getLyric().then(lyric => {
         this.currentLyric = new Lyric(lyric, this.handleLyric)
@@ -333,6 +309,9 @@ export default {
         this.$refs.lyricList.scrollTo(0, 0, 1000)
       }
       this.playingLyric = txt
+    },
+    showPlaylist() {
+      this.$refs.playlist.show()
     },
     middleTouchStart(e) {
       this.touch.initiated = true
@@ -420,15 +399,14 @@ export default {
       }
     },
     ...mapMutations({
-      setFullScreen: 'SET_FULL_SCREEN',
-      setPlayingState: 'SET_PLAYING_STATE',
-      setCurrentIndex: 'SET_CURRENT_INDEX',
-      setPlayMode: 'SET_PLAY_MODE',
-      setPlayList: 'SET_PLAYLIST'
+      setFullScreen: 'SET_FULL_SCREEN'
     })
   },
   watch: {
     currentSong(newSong, oldSong) {
+      if (!newSong.id) {
+        return
+      }
       if (newSong.id === oldSong.id) {
         return
       }
@@ -457,7 +435,8 @@ export default {
   components: {
     ProgressBar,
     ProgressCircle,
-    Scroll
+    Scroll,
+    Playlist
   }
 }
 </script>
