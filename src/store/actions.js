@@ -1,6 +1,7 @@
 import * as types from './mutation-types'
 import { playMode } from 'common/js/config'
 import { shuffle } from 'common/js/util'
+import { saveSearch } from 'common/js/cache'
 
 // 获取歌曲在列表中的索引
 function findIndex(list, song) {
@@ -75,4 +76,8 @@ export const insertSong = function ({commit, state}, song) {
   commit(types.SET_CURRENT_INDEX, currentIndex)
   commit(types.SET_FULL_SCREEN, true)
   commit(types.SET_PLAYING_STATE, true)
+}
+
+export const saveSearchHistory = function({commit}, query) {
+  commit(types.SET_SEARCH_HISTORY, saveSearch(query))
 }
