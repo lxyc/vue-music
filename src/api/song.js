@@ -3,7 +3,7 @@ import jsonp from 'common/js/jsonp'
 import { getUid } from 'common/js/uid'
 import axios from 'axios'
 
-const debug = process.env.NODE_ENV !== 'production'
+// const debug = process.env.NODE_ENV !== 'production'
 
 // 获取每首歌曲唯一对应的Vkey
 export function getVKey(songmid, filename) {
@@ -28,7 +28,8 @@ export function getVKey(songmid, filename) {
 }
 
 export function getLyric(mid) {
-  const url = debug ? '/api/lyric' : 'http://ustbhuangyi.com/music/api/lyric'
+  // const url = debug ? '/api/lyric' : 'http://ustbhuangyi.com/music/api/lyric'
+  const url = '/api/lyric'
 
   const data = Object.assign({}, commonParams, {
     songmid: mid,

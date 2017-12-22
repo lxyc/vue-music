@@ -68,7 +68,6 @@ export const playerMixin = {
       }
     },
     toggleFavorite(song) {
-      console.log(this.isFavorite(song))
       if (this.isFavorite(song)) {
         this.deleteFavoriteList(song)
       } else {

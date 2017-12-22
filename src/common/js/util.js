@@ -5,7 +5,6 @@ function getRandomInt(min, max) {
 
 // 随机交换数组中的元素，以打乱数组
 export function shuffle(arr) {
-  console.log(arr)
   let _arr = arr.slice()
   for (let i = 0; i < _arr.length; i++) {
     let j = getRandomInt(0, i)
