@@ -95,7 +95,7 @@
     </transition>
     <playlist ref="playlist"></playlist>
     <!-- 当浏览器能够开始播放指定的音频/视频时，发生 canplay 事件 -->
-    <audio ref="audio" :src="currentSong.url" @canplay="ready" @error="error" @timeupdate="updateTime" @ended="end"></audio>
+    <audio ref="audio" :src="currentSong.url" @play="ready" @error="error" @timeupdate="updateTime" @ended="end"></audio>
   </div>
 </template>
 
@@ -231,6 +231,7 @@ export default {
       // 列表中仅有一首歌时的情况
       if (this.playList.length === 1) {
         this.loop()
+        return
       } else {
         let index = this.currentIndex + 1
         if (index === this.playList.length) {
@@ -249,6 +250,7 @@ export default {
       }
       if (this.playList.length === 1) {
         this.loop()
+        return
       } else {
         let index = this.currentIndex - 1
         if (index === -1) {
@@ -290,6 +292,9 @@ export default {
     },
     getLyric() {
       this.currentSong.getLyric().then(lyric => {
+        if (this.currentSong.lyric !== lyric) {
+          return
+        }
         this.currentLyric = new Lyric(lyric, this.handleLyric)
         if (this.playing) {
           this.currentLyric.play()
@@ -423,7 +428,8 @@ export default {
       //   this.$refs.audio.play()
       //   this.getLyric()
       // })
-      setTimeout(() => {
+      clearTimeout(this.timer)
+      this.timer = setTimeout(() => {
         this.$refs.audio.play()
         this.getLyric()
       }, 1000)
